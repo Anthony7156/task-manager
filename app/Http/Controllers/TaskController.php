@@ -2,24 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Events\TaskCreated;
+use App\Http\Requests\StoreTaskRequest;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
-    //
-}
-use App\Events\TaskCreated;
+    public function index()
+    {
+        $tasks = Task::latest()->get();
 
-public function store(StoreTaskRequest $request)
-{
-    $validated = $request->validated();
+        return view('tasks.index', compact('tasks'));
+    }
 
-    $task = Task::create($validated);
+    public function create()
+    {
+        return view('tasks.create');
+    }
 
-    // Вызываем событие
-    event(new TaskCreated($task));
+    public function store(StoreTaskRequest $request)
+    {
+        $validated = $request->validated();
 
-    session()->flash('success', 'Задача «' . $task->title . '» успешно создана!');
+        $task = Task::create($validated);
 
-    return redirect()->route('tasks.index');
+        // Вызываем событие
+        event(new TaskCreated($task));
+
+        session()->flash('success', 'Задача «' . $task->title . '» успешно создана!');
+
+        return redirect()->route('tasks.index');
+    }
+
+    public function complete(Task $task)
+    {
+        $task->update(['is_completed' => true]);
+
+        session()->flash('success', 'Задача «' . $task->title . '» отмечена как выполненная!');
+
+        return redirect()->route('tasks.index');
+    }
+
+    public function destroy(Task $task)
+    {
+        $task->delete();
+
+        session()->flash('success', 'Задача удалена.');
+
+        return redirect()->route('tasks.index');
+    }
 }
