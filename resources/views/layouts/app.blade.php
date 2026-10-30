@@ -2,26 +2,33 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        .alert { padding: 10px; margin-bottom: 20px; border-radius: 5px; }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        .completed { text-decoration: line-through; color: #888; }
-    </style>
+    @vite(['resources/css/app.css'])
 </head>
-<body>
-    <h1>Task Manager</h1>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="min-h-screen">
+        <header class="border-b border-gray-200 bg-white">
+            <div class="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
+                <a href="/tasks" class="text-xl font-semibold text-indigo-600">
+                    Task Manager
+                </a>
+                <a href="/tasks/create"
+                   class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700">
+                    + Новая задача
+                </a>
+            </div>
+        </header>
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+        <main class="mx-auto max-w-4xl px-4 py-8">
+            @if (session('success'))
+                <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-    @yield('content')
+            @yield('content')
+        </main>
+    </div>
 </body>
 </html>
